@@ -31,6 +31,7 @@ export const addHomeData = async (req, res) => {
             twitter,
             linkedIn,
             youtube,
+            location,
         } = req.body;
 
 
@@ -55,6 +56,7 @@ export const addHomeData = async (req, res) => {
             twitter,
             linkedIn,
             youtube,
+            location
         });
 
 
@@ -86,6 +88,7 @@ export const editHomeData = async (req, res) => {
             twitter,
             linkedIn,
             youtube,
+            location
         } = req.body;
 
 
@@ -103,6 +106,7 @@ export const editHomeData = async (req, res) => {
                 twitter,
                 linkedIn,
                 youtube,
+                location
             };
 
 
@@ -141,6 +145,7 @@ export const editHomeData = async (req, res) => {
         if (twitter) homeData.twitter = twitter;
         if (linkedIn) homeData.linkedIn = linkedIn;
         if (youtube) homeData.youtube = youtube;
+        if (location) homeData.location = location;
 
         homeData.landingImg = urlLandingImg;
         homeData.logoImg = urlLogoImg;

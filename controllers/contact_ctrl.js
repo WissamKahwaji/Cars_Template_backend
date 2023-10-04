@@ -6,7 +6,7 @@ import { contactModel } from "../models/contact_us/contact_us_model.js";
 
 export const getContactData = async (req, res) => {
     try {
-        const contactData = await contactModel.find().populate('content');
+        const contactData = await contactModel.findOne().populate('content');
         return res.status(200).json({
             message: 'Success',
             data: contactData,
@@ -23,7 +23,7 @@ export const addContactData = async (req, res) => {
 
         const { title, content } = req.body;
         let urlImg;
-        if (req.files['img']) {
+        if (req.files) {
             const imgPath = req.files['img'][0].path;
             urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
         }

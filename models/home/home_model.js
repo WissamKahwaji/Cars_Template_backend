@@ -16,6 +16,7 @@ const homeSchema = new mongoose.Schema({
     twitter: String,
     linkedIn: String,
     youtube: String,
+    location: String,
 });
 
 
