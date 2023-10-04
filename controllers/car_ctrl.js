@@ -11,7 +11,7 @@ export const getCarPageData = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Something went wrong" });
+        return res.status(500).json({ message: "Something went wrong" });
     }
 };
 
@@ -82,7 +82,7 @@ export const addCarPageData = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Something went wrong' });
+        return res.status(500).json({ message: 'Something went wrong' });
     }
 };
 
@@ -141,7 +141,7 @@ export const editCarPageData = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Something went wrong' });
+        return res.status(500).json({ message: 'Something went wrong' });
     }
 };
 
@@ -192,7 +192,7 @@ export const addCar = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Something went wrong' });
+        return res.status(500).json({ message: 'Something went wrong' });
     }
 };
 
@@ -224,7 +224,7 @@ export const editCar = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Something went wrong' });
+        return res.status(500).json({ message: 'Something went wrong' });
     }
 };
 
@@ -250,6 +250,6 @@ export const deleteCar = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Something went wrong' });
+        return res.status(500).json({ message: 'Something went wrong' });
     }
 };
