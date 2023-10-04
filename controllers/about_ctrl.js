@@ -4,7 +4,7 @@ import { aboutModel } from "../models/about/about_model.js";
 
 export const getAboutData = async (req, res) => {
     try {
-        const aboutData = await aboutModel.find().populate('content');
+        const aboutData = await aboutModel.findOne().populate('content');
         return res.status(200).json({
             message: 'Success',
             data: aboutData,

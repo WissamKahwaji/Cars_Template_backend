@@ -22,9 +22,11 @@ export const addContactData = async (req, res) => {
     try {
 
         const { title, content } = req.body;
-
-        const imgPath = req.files['img'][0].path;
-        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+        let urlImg;
+        if (req.files['img']) {
+            const imgPath = req.files['img'][0].path;
+            urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+        }
 
         const newContent = new contactContentModel({
             number: content.number,

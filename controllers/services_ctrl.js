@@ -3,7 +3,7 @@ import { serviceModel } from "../models/services/services_model.js";
 
 export const getServicesData = async (req, res) => {
     try {
-        const servicesData = await serviceModel.find().populate('content');
+        const servicesData = await serviceModel.findOne().populate('content');
         return res.status(200).json({
             message: 'Success',
             data: servicesData,

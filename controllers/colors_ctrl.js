@@ -3,7 +3,7 @@ import { ColorsModel } from "../models/colors/colors_model.js";
 
 export const getColors = async (req, res) => {
     try {
-        const colors = await ColorsModel.find();
+        const colors = await ColorsModel.findOne();
         return res.status(200).json({
             message: 'Success',
             data: colors,

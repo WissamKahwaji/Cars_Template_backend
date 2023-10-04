@@ -4,7 +4,7 @@ import { carPageModel } from "../models/cars/car_page_model.js";
 
 export const getCarPageData = async (req, res) => {
     try {
-        const carPageData = await carPageModel.find().populate('content');
+        const carPageData = await carPageModel.findOne().populate('content');
         return res.status(200).json({
             message: 'Success',
             data: carPageData,

@@ -4,7 +4,7 @@ import { ratesModel } from "../models/rates/rates_model.js";
 
 export const getRatesData = async (req, res) => {
     try {
-        const ratesData = await ratesModel.find().populate('content');
+        const ratesData = await ratesModel.findOne().populate('content');
         return res.status(200).json({
             message: 'Success',
             data: ratesData,
