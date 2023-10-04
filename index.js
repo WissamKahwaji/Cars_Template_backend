@@ -15,7 +15,7 @@ import servicesRoutes from './routes/service_routes.js';
 import aboutRoutes from './routes/about_router.js';
 import carRoutes from './routes/car_router.js';
 import navRoutes from './routes/nav_router.js';
-
+import contactRoutes from './routes/contact_router.js';
 const app = express();
 dotenv.config();
 
@@ -72,6 +72,7 @@ app.use('/services', servicesRoutes);
 app.use('/about', aboutRoutes);
 app.use('/carPage', carRoutes);
 app.use('/nav', navRoutes);
+app.use('/contact', contactRoutes);
 
 
 

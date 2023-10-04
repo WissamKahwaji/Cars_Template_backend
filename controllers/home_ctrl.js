@@ -4,7 +4,7 @@ import { homeModel } from "../models/home/home_model.js";
 
 export const getHomeData = async (req, res) => {
     try {
-        const homeData = await homeModel.find();
+        const homeData = await homeModel.findOne();
 
         return res.status(200).json({
             message: 'Success',
