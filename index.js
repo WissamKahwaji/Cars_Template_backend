@@ -16,10 +16,11 @@ import aboutRoutes from './routes/about_router.js';
 import carRoutes from './routes/car_router.js';
 import navRoutes from './routes/nav_router.js';
 import contactRoutes from './routes/contact_router.js';
+
+
 const app = express();
 dotenv.config();
 
-const port = 5000;
 
 
 const __filename = fileURLToPath(import.meta.url);

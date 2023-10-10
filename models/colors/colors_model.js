@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 const colorsModelSchema = new mongoose.Schema({
     mainColor: String,
     navColor: String,
+    linear: String,
 });
 
 

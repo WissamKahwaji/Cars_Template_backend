@@ -17,7 +17,7 @@ export const getCarPageData = async (req, res) => {
 
 export const addCarPageData = async (req, res) => {
     try {
-        const { pageHeading, descHeading, content } = req.body;
+        const { pageHeading, descHeading, content, concellationPolicy } = req.body;
 
         const imgPath = req.files['img'][0].path;
         const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
@@ -71,6 +71,7 @@ export const addCarPageData = async (req, res) => {
             descHeading,
             img: urlImg,
             content: contentArray,
+            concellationPolicy
         });
 
 
@@ -89,7 +90,7 @@ export const addCarPageData = async (req, res) => {
 export const editCarPageData = async (req, res) => {
     try {
         const { id } = req.params;
-        const { pageHeading, descHeading, img, content } = req.body;
+        const { pageHeading, descHeading, img, content,concellationPolicy } = req.body;
 
 
         const carPageData = await carPageModel.findById(id);
@@ -101,6 +102,7 @@ export const editCarPageData = async (req, res) => {
 
         if (pageHeading) carPageData.pageHeading = pageHeading;
         if (descHeading) carPageData.descHeading = descHeading;
+        if(concellationPolicy) carPageData.concellationPolicy=concellationPolicy;
         if (img) {
             const imgPath = req.files['img'][0].path;
             const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
@@ -148,7 +150,7 @@ export const editCarPageData = async (req, res) => {
 export const addCar = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, desc } = req.body;
+        const { title, desc,rates_description } = req.body;
 
         const carPage = await carPageModel.findById(id);
         if (!carPage) {
@@ -162,6 +164,7 @@ export const addCar = async (req, res) => {
             img: urlImg,
             title,
             desc,
+            rates_description,
         });
         if (req.files['imgs']) {
             const carImages = req.files['imgs'];
@@ -199,7 +202,7 @@ export const addCar = async (req, res) => {
 export const editCar = async (req, res) => {
     try {
         const { id } = req.params;
-        const { img, title, desc, imgs } = req.body;
+        const { img, title, desc, imgs,rates_description } = req.body;
 
         const car = await carModel.findById(id);
 
@@ -214,7 +217,7 @@ export const editCar = async (req, res) => {
         }
         if (desc) car.desc = desc;
         if (title) car.title = title;
-
+        if(rates_description) car.rates_description=rates_description;
 
         await car.save();
 

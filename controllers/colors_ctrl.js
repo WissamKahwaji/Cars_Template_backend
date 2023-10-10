@@ -17,10 +17,10 @@ export const getColors = async (req, res) => {
 
 export const addColors = async (req, res) => {
     try {
-        const { mainColor, navColor } = req.body;
+        const { mainColor, navColor, linear } = req.body;
 
 
-        const newColor = new ColorsModel({ mainColor, navColor });
+        const newColor = new ColorsModel({ mainColor, navColor, linear });
 
 
         await newColor.save();

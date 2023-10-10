@@ -6,6 +6,7 @@ const carSchema = new mongoose.Schema({
     title: String,
     desc: String,
     imgs: [String],
+    rates_description: String,
 });
 
 
