@@ -29,11 +29,20 @@ export const addContactData = async (req, res) => {
         }
 
         const newContent = new contactContentModel({
-            number: content.number,
+            titleOne: content.titleOne,
+            titleTwo: content.titleTwo,
+            phoneNumber: content.phoneNumber,
+
             location: content.location,
             email: content.email,
-            phone: content.phone,
+            emailOne: content.emailOne,
+            emailTwo: content.emailTwo,
+            mobileOne: content.mobileOne,
+            mobileTwo: content.mobileTwo,
             whatsApp: content.whatsApp,
+            faceBook: content.faceBook,
+            linkedIn: content.linkedIn,
+            instagram: content.instagram,
         });
 
 
@@ -79,9 +88,15 @@ export const editContactData = async (req, res) => {
 
 
         if (content) {
+            if (content.titleOne) {
+                contact.content.titleOne = content.titleOne;
+            }
+            if (content.titleTwo) {
+                contact.content.titleTwo = content.titleTwo;
+            }
 
-            if (content.number) {
-                contact.content.number = content.number;
+            if (content.phoneNumber) {
+                contact.content.phoneNumber = content.phoneNumber;
             }
             if (content.location) {
                 contact.content.location = content.location;
@@ -89,11 +104,29 @@ export const editContactData = async (req, res) => {
             if (content.email) {
                 contact.content.email = content.email;
             }
-            if (content.phone) {
-                contact.content.phone = content.phone;
+            if (content.emailOne) {
+                contact.content.emailOne = content.emailOne;
+            }
+            if (content.emailTwo) {
+                contact.content.emailTwo = content.emailTwo;
+            }
+            if (content.mobileOne) {
+                contact.content.mobileOne = content.mobileOne;
+            }
+            if (content.mobileTwo) {
+                contact.content.mobileTwo = content.mobileTwo;
             }
             if (content.whatsApp) {
                 contact.content.whatsApp = content.whatsApp;
+            }
+            if (content.faceBook) {
+                contact.content.faceBook = content.faceBook;
+            }
+            if (content.linkedIn) {
+                contact.content.linkedIn = content.linkedIn;
+            }
+            if (content.instagram) {
+                contact.content.instagram = content.instagram;
             }
         }
 

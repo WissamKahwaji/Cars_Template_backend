@@ -3,11 +3,19 @@ import mongoose from "mongoose";
 
 
 const contactContentSchema = new mongoose.Schema({
-    number: String,
+    titleOne: String,
+    titleTwo: String,
+    phoneNumber: String,
     location: String,
     email: String,
-    phone: String,
+    emailOne: String,
+    emailTwo: String,
+    mobileOne: String,
+    mobileTwo: String,
     whatsApp: String,
+    faceBook: String,
+    linkedIn: String,
+    instagram: String,
 });
 
 
