@@ -1,10 +1,16 @@
 import { carModel } from "../models/cars/car_model.js";
 import { carPageModel } from "../models/cars/car_page_model.js";
+import { carRateModel } from "../models/cars/car_rate_model.js";
 
 
 export const getCarPageData = async (req, res) => {
     try {
-        const carPageData = await carPageModel.findOne().populate('content');
+        const carPageData = await carPageModel.findOne().populate({
+            path: 'content',
+            populate: [
+                { path: 'carRate', }
+            ],
+        });
         return res.status(200).json({
             message: 'Success',
             data: carPageData,
@@ -90,7 +96,7 @@ export const addCarPageData = async (req, res) => {
 export const editCarPageData = async (req, res) => {
     try {
         const { id } = req.params;
-        const { pageHeading, descHeading, img, content,concellationPolicy } = req.body;
+        const { pageHeading, descHeading, img, content, concellationPolicy } = req.body;
 
 
         const carPageData = await carPageModel.findById(id);
@@ -102,7 +108,7 @@ export const editCarPageData = async (req, res) => {
 
         if (pageHeading) carPageData.pageHeading = pageHeading;
         if (descHeading) carPageData.descHeading = descHeading;
-        if(concellationPolicy) carPageData.concellationPolicy=concellationPolicy;
+        if (concellationPolicy) carPageData.concellationPolicy = concellationPolicy;
         if (img) {
             const imgPath = req.files['img'][0].path;
             const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
@@ -150,7 +156,7 @@ export const editCarPageData = async (req, res) => {
 export const addCar = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, desc,rates_description } = req.body;
+        const { title, desc, rates_description } = req.body;
 
         const carPage = await carPageModel.findById(id);
         if (!carPage) {
@@ -202,7 +208,7 @@ export const addCar = async (req, res) => {
 export const editCar = async (req, res) => {
     try {
         const { id } = req.params;
-        const { img, title, desc, imgs,rates_description } = req.body;
+        const { img, title, desc, imgs, rates_description } = req.body;
 
         const car = await carModel.findById(id);
 
@@ -217,7 +223,7 @@ export const editCar = async (req, res) => {
         }
         if (desc) car.desc = desc;
         if (title) car.title = title;
-        if(rates_description) car.rates_description=rates_description;
+        if (rates_description) car.rates_description = rates_description;
 
         await car.save();
 
@@ -256,3 +262,48 @@ export const deleteCar = async (req, res) => {
         return res.status(500).json({ message: 'Something went wrong' });
     }
 };
+
+
+export const getCarRate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const rate = await carRateModel.findOne({ id: id });
+        return res.status(200).json({
+            message: 'get Car Rate successfully',
+            data: rate,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Something went wrong' });
+    }
+}
+
+export const addCarRate = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        const { daily, weekly, monthly } = req.body;
+
+        const car = await carModel.findById(id);
+        if (!car) {
+            return res.status(404).json({ message: 'Car data not found' });
+        }
+
+        const carRate = new carRateModel({
+            daily: daily,
+            weekly: weekly,
+            monthly: monthly,
+        });
+        await carRate.save();
+        car.carRate = carRate._id;
+        await car.save();
+        return res.status(201).json({
+            message: 'Car added successfully',
+            data: carRate,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Something went wrong' });
+    }
+}

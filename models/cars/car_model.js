@@ -7,6 +7,10 @@ const carSchema = new mongoose.Schema({
     desc: String,
     imgs: [String],
     rates_description: String,
+    carRate: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CarRate',
+    }
 });
 
 
