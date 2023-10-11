@@ -6,7 +6,12 @@ import { carRateModel } from "../models/cars/car_rate_model.js";
 export const getCarPageData = async (req, res) => {
     try {
         const carPageData = await carPageModel.findOne().populate({
-            path: 'content',
+            path: 'categoryOneContent',
+            populate: [
+                { path: 'carRate', }
+            ],
+        }).populate({
+            path: 'categoryTwoContent',
             populate: [
                 { path: 'carRate', }
             ],
@@ -23,16 +28,16 @@ export const getCarPageData = async (req, res) => {
 
 export const addCarPageData = async (req, res) => {
     try {
-        const { pageHeading, descHeading, content, concellationPolicy } = req.body;
+        const { pageHeading, descHeading, categoryOne, categoryTwo, categoryOneContent, categoryTwoContent, concellationPolicy } = req.body;
 
         const imgPath = req.files['img'][0].path;
         const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
 
         const contentArray = [];
+        const contentTwoArray = [];
 
-
-        if (content) {
-            for (const contentItem of content) {
+        if (categoryOneContent) {
+            for (const contentItem of categoryOneContent) {
                 const { img, title, desc, imgs } = contentItem;
                 const imgPath = img.path;
 
@@ -71,12 +76,56 @@ export const addCarPageData = async (req, res) => {
             }
 
         }
+        if (categoryTwoContent) {
+            for (const contentItem of categoryTwoContent) {
+                const { img, title, desc, imgs } = contentItem;
+                const imgPath = img.path;
+
+                const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+
+
+
+
+                const newContentItem = new carModel({
+                    img: urlImg,
+                    title,
+                    desc,
+                });
+
+                if (req.files['imgs']) {
+                    const carImages = req.files['imgs'];
+                    const imageUrls = [];
+                    if (!carImages || !Array.isArray(carImages)) {
+                        return res.status(404).json({ message: 'Attached files are missing or invalid.' });
+                    }
+
+                    for (const image of carImages) {
+                        if (!image) {
+                            return res.status(404).json({ message: 'Attached file is not an image.' });
+                        }
+
+                        const imageUrl = 'http://localhost:5000/' + image.path.replace(/\\/g, '/');
+                        imageUrls.push(imageUrl);
+                        newContentItem.imgs = imageUrls;
+                    }
+                }
+
+                await newContentItem.save();
+
+                contentTwoArray.push(newContentItem._id);
+            }
+
+        }
+
 
         const newCarPageData = new carPageModel({
             pageHeading,
             descHeading,
             img: urlImg,
-            content: contentArray,
+            categoryOne: categoryOne,
+            categoryTwo: categoryTwo,
+            categoryOneContent: contentArray,
+            categoryTwoContent: contentTwoArray,
             concellationPolicy
         });
 
@@ -96,7 +145,7 @@ export const addCarPageData = async (req, res) => {
 export const editCarPageData = async (req, res) => {
     try {
         const { id } = req.params;
-        const { pageHeading, descHeading, img, content, concellationPolicy } = req.body;
+        const { pageHeading, descHeading, categoryOne, categoryTwo, img, categoryOneContent, categoryTwoContent, concellationPolicy } = req.body;
 
 
         const carPageData = await carPageModel.findById(id);
@@ -108,6 +157,8 @@ export const editCarPageData = async (req, res) => {
 
         if (pageHeading) carPageData.pageHeading = pageHeading;
         if (descHeading) carPageData.descHeading = descHeading;
+        if (categoryOne) carPageData.categoryOne = categoryOne;
+        if (categoryTwo) carPageData.categoryTwo = categoryTwo;
         if (concellationPolicy) carPageData.concellationPolicy = concellationPolicy;
         if (img) {
             const imgPath = req.files['img'][0].path;
@@ -116,9 +167,32 @@ export const editCarPageData = async (req, res) => {
         }
 
 
-        if (content) {
+        if (categoryOneContent) {
 
-            for (const contentItem of content) {
+            for (const contentItem of categoryOneContent) {
+                const { _id, img, title, desc, imgs } = contentItem;
+
+
+                const contentItemToUpdate = await carModel.findById(_id);
+
+                if (contentItemToUpdate) {
+
+                    if (img) {
+                        const imgPath = img.path;
+                        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+                        contentItemToUpdate.img = urlImg;
+                    }
+                    if (desc) contentItemToUpdate.desc = desc;
+                    if (title) contentItemToUpdate.title = title;
+
+
+                    await contentItemToUpdate.save();
+                }
+            }
+        }
+        if (categoryTwoContent) {
+
+            for (const contentItem of categoryTwoContent) {
                 const { _id, img, title, desc, imgs } = contentItem;
 
 
@@ -153,7 +227,7 @@ export const editCarPageData = async (req, res) => {
     }
 };
 
-export const addCar = async (req, res) => {
+export const addCarToCategoryOne = async (req, res) => {
     try {
         const { id } = req.params;
         const { title, desc, rates_description } = req.body;
@@ -191,9 +265,60 @@ export const addCar = async (req, res) => {
         }
 
         await car.save();
-        const contentArray = carPage.content;
+        const contentArray = carPage.categoryOneContent;
         contentArray.push(car._id);
-        carPage.content = contentArray;
+        carPage.categoryOneContent = contentArray;
+        await carPage.save();
+        return res.status(201).json({
+            message: 'Car added successfully',
+            data: car,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+export const addCarToCategoryTwo = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, desc, rates_description } = req.body;
+
+        const carPage = await carPageModel.findById(id);
+        if (!carPage) {
+            return res.status(404).json({ message: 'CarPage data not found' });
+        }
+
+        const imgPath = req.files['img'][0].path;
+        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+
+        const car = new carModel({
+            img: urlImg,
+            title,
+            desc,
+            rates_description,
+        });
+        if (req.files['imgs']) {
+            const carImages = req.files['imgs'];
+            const imageUrls = [];
+            if (!carImages || !Array.isArray(carImages)) {
+                return res.status(404).json({ message: 'Attached files are missing or invalid.' });
+            }
+
+            for (const image of carImages) {
+                if (!image) {
+                    return res.status(404).json({ message: 'Attached file is not an image.' });
+                }
+
+                const imageUrl = 'http://localhost:5000/' + image.path.replace(/\\/g, '/');
+                imageUrls.push(imageUrl);
+                car.imgs = imageUrls;
+            }
+        }
+
+        await car.save();
+        const contentArray = carPage.categoryTwoContent;
+        contentArray.push(car._id);
+        carPage.categoryTwoContent = contentArray;
         await carPage.save();
         return res.status(201).json({
             message: 'Car added successfully',

@@ -1,5 +1,5 @@
 import express from 'express';
-import { addCar, addCarPageData, addCarRate, deleteCar, editCar, editCarPageData, getCarPageData, getCarRate } from '../controllers/car_ctrl.js';
+import { addCarPageData, addCarRate, addCarToCategoryOne, addCarToCategoryTwo, deleteCar, editCar, editCarPageData, getCarPageData, getCarRate } from '../controllers/car_ctrl.js';
 
 
 const router = express.Router();
@@ -8,7 +8,8 @@ const router = express.Router();
 router.get('/', getCarPageData);
 router.post('/add-carPage', addCarPageData);
 router.put('/edit-carPage/:id', editCarPageData);
-router.post('/:id/add-car', addCar);
+router.post('/:id/add-car-to-cat-one', addCarToCategoryOne);
+router.post('/:id/add-car-to-cat-two', addCarToCategoryTwo);
 router.put('/edit-car/:id', editCar);
 router.delete('/:carPageId/delete-car/:id', deleteCar);
 router.get('/get-car-rate/:id', getCarRate);

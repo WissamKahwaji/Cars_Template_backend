@@ -5,7 +5,15 @@ const carPageSchema = new mongoose.Schema({
     pageHeading: String,
     descHeading: String,
     img: String,
-    content: [
+    categoryOne: String,
+    categoryTwo: String,
+    categoryOneContent: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Car',
+        }
+    ],
+    categoryTwoContent: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Car',
