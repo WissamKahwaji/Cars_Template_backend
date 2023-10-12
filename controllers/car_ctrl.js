@@ -227,6 +227,20 @@ export const editCarPageData = async (req, res) => {
     }
 };
 
+export const getCarById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const car = await carModel.findById(id).populate('carRate');
+        return res.status(200).json({
+            message: ' successfully',
+            data: car,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
 export const addCarToCategoryOne = async (req, res) => {
     try {
         const { id } = req.params;
