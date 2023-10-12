@@ -17,7 +17,7 @@ import carRoutes from './routes/car_router.js';
 import navRoutes from './routes/nav_router.js';
 import contactRoutes from './routes/contact_router.js';
 import ourClientsRoutes from './routes/our_client_router.js';
-
+import bookingRoutes from './routes/booking_router.js';
 const app = express();
 dotenv.config();
 
@@ -75,6 +75,7 @@ app.use('/carPage', carRoutes);
 app.use('/nav', navRoutes);
 app.use('/contact', contactRoutes);
 app.use('/ourClients', ourClientsRoutes);
+app.use('/bookings', bookingRoutes);
 
 
 app.get('/', (req, res) => res.send('Server is Running>>>>>'));

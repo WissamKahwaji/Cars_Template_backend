@@ -370,8 +370,8 @@ export const deleteCar = async (req, res) => {
         if (!carPage) {
             return res.status(404).json({ message: 'CarPage data not found' });
         }
-        carPage.content = carPage.content.pull(id);
-        await carPage.save();
+        // carPage.content = carPage.content.pull(id);
+        // await carPage.save();
         const deletedCar = await carModel.findByIdAndRemove(id);
 
         if (!deletedCar) {
