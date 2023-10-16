@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', getCarPageData);
 router.post('/add-carPage', addCarPageData);
 router.put('/edit-carPage/:id', editCarPageData);
-router.get('/get-car-by-id', getCarById);
+router.get('/get-car-by-id/:id', getCarById);
 router.post('/:id/add-car-to-cat-one', addCarToCategoryOne);
 router.post('/:id/add-car-to-cat-two', addCarToCategoryTwo);
 router.put('/edit-car/:id', editCar);
