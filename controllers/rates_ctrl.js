@@ -20,7 +20,7 @@ export const addRatesData = async (req, res) => {
         const { pageHeading, concellationPolicy, content } = req.body;
         const imgHeading = req.files['imgHeading'][0].path;
 
-        const urlImgHeading = 'http://localhost:5000/' + imgHeading.replace(/\\/g, '/');
+        const urlImgHeading = 'https://www.rallyback.siidevelopment.com/' + imgHeading.replace(/\\/g, '/');
 
 
         const contentArray = [];
@@ -31,7 +31,7 @@ export const addRatesData = async (req, res) => {
                 const { img, desc } = contentItem;
                 const imgPath = img.path;
 
-                const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+                const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
 
                 const newContentItem = new ratesContentModel({
@@ -95,7 +95,7 @@ export const editRatesData = async (req, res) => {
 
                     if (img) {
                         const imgPath = img.path;
-                        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+                        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
                         contentItemToUpdate.img = urlImg;
                     }
                     if (desc) contentItemToUpdate.desc = desc;
@@ -130,7 +130,7 @@ export const addRatesContent = async (req, res) => {
         }
 
         const imgPath = req.files['img'][0].path;
-        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
         const newRatesContent = new ratesContentModel({
             img: urlImg,
@@ -166,7 +166,7 @@ export const editRatesContent = async (req, res) => {
         if (img) {
 
             const imgPath = req.files['img'][0].path;
-            const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+            const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
             ratesContent.img = urlImg;
         }
         if (desc) ratesContent.desc = desc;

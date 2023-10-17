@@ -1,5 +1,5 @@
 import express from 'express';
-import { addColors, getColors } from '../controllers/colors_ctrl.js';
+import { addColors, editColors, getColors } from '../controllers/colors_ctrl.js';
 
 
 const router = express.Router();
@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/', getColors);
 router.post('/add-colors', addColors);
+router.put('/edit-colors', editColors);
 
 
 

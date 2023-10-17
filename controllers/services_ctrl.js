@@ -28,7 +28,7 @@ export const addServicesData = async (req, res) => {
                 const { img, title, desc } = contentItem;
                 const imgPath = img.path;
 
-                const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+                const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
 
                 const newContentItem = new ratesContentModel({
@@ -92,7 +92,7 @@ export const editServiceData = async (req, res) => {
 
                     if (img) {
                         const imgPath = img.path;
-                        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+                        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
                         contentItemToUpdate.img = urlImg;
                     }
                     if (desc) contentItemToUpdate.desc = desc;
@@ -127,7 +127,7 @@ export const addServiceContent = async (req, res) => {
         }
 
         const imgPath = req.files['img'][0].path;
-        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
         const newServiceContent = new serviceContent({
             img: urlImg,
@@ -163,7 +163,7 @@ export const editServiceContent = async (req, res) => {
 
         if (img) {
             const imgPath = req.files['img'][0].path;
-            const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+            const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
             serviceDataContent.img = urlImg;
         }
         if (desc) serviceDataContent.desc = desc;

@@ -31,7 +31,7 @@ export const addCarPageData = async (req, res) => {
         const { pageHeading, descHeading, categoryOne, categoryTwo, categoryOneContent, categoryTwoContent, concellationPolicy } = req.body;
 
         const imgPath = req.files['img'][0].path;
-        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
         const contentArray = [];
         const contentTwoArray = [];
@@ -41,7 +41,7 @@ export const addCarPageData = async (req, res) => {
                 const { img, title, desc, imgs } = contentItem;
                 const imgPath = img.path;
 
-                const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+                const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
 
 
@@ -64,7 +64,7 @@ export const addCarPageData = async (req, res) => {
                             return res.status(404).json({ message: 'Attached file is not an image.' });
                         }
 
-                        const imageUrl = 'http://localhost:5000/' + image.path.replace(/\\/g, '/');
+                        const imageUrl = 'https://www.rallyback.siidevelopment.com/' + image.path.replace(/\\/g, '/');
                         imageUrls.push(imageUrl);
                         newContentItem.imgs = imageUrls;
                     }
@@ -81,7 +81,7 @@ export const addCarPageData = async (req, res) => {
                 const { img, title, desc, imgs } = contentItem;
                 const imgPath = img.path;
 
-                const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+                const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
 
 
@@ -104,7 +104,7 @@ export const addCarPageData = async (req, res) => {
                             return res.status(404).json({ message: 'Attached file is not an image.' });
                         }
 
-                        const imageUrl = 'http://localhost:5000/' + image.path.replace(/\\/g, '/');
+                        const imageUrl = 'https://www.rallyback.siidevelopment.com/' + image.path.replace(/\\/g, '/');
                         imageUrls.push(imageUrl);
                         newContentItem.imgs = imageUrls;
                     }
@@ -162,7 +162,7 @@ export const editCarPageData = async (req, res) => {
         if (concellationPolicy) carPageData.concellationPolicy = concellationPolicy;
         if (img) {
             const imgPath = req.files['img'][0].path;
-            const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+            const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
             carPageData.img = urlImg;
         }
 
@@ -179,7 +179,7 @@ export const editCarPageData = async (req, res) => {
 
                     if (img) {
                         const imgPath = img.path;
-                        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+                        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
                         contentItemToUpdate.img = urlImg;
                     }
                     if (desc) contentItemToUpdate.desc = desc;
@@ -202,7 +202,7 @@ export const editCarPageData = async (req, res) => {
 
                     if (img) {
                         const imgPath = img.path;
-                        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+                        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
                         contentItemToUpdate.img = urlImg;
                     }
                     if (desc) contentItemToUpdate.desc = desc;
@@ -252,7 +252,7 @@ export const addCarToCategoryOne = async (req, res) => {
         }
 
         const imgPath = req.files['img'][0].path;
-        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
         const car = new carModel({
             img: urlImg,
@@ -272,7 +272,7 @@ export const addCarToCategoryOne = async (req, res) => {
                     return res.status(404).json({ message: 'Attached file is not an image.' });
                 }
 
-                const imageUrl = 'http://localhost:5000/' + image.path.replace(/\\/g, '/');
+                const imageUrl = 'https://www.rallyback.siidevelopment.com/' + image.path.replace(/\\/g, '/');
                 imageUrls.push(imageUrl);
                 car.imgs = imageUrls;
             }
@@ -303,7 +303,7 @@ export const addCarToCategoryTwo = async (req, res) => {
         }
 
         const imgPath = req.files['img'][0].path;
-        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
         const car = new carModel({
             img: urlImg,
@@ -323,7 +323,7 @@ export const addCarToCategoryTwo = async (req, res) => {
                     return res.status(404).json({ message: 'Attached file is not an image.' });
                 }
 
-                const imageUrl = 'http://localhost:5000/' + image.path.replace(/\\/g, '/');
+                const imageUrl = 'https://www.rallyback.siidevelopment.com/' + image.path.replace(/\\/g, '/');
                 imageUrls.push(imageUrl);
                 car.imgs = imageUrls;
             }
@@ -357,7 +357,7 @@ export const editCar = async (req, res) => {
 
         if (img) {
             const imgPath = req.files['img'][0].path;
-            const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+            const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
             car.img = urlImg;
         }
         if (desc) car.desc = desc;

@@ -35,3 +35,38 @@ export const addColors = async (req, res) => {
     }
 };
 
+export const editColors = async (req, res) => {
+    try {
+        const { mainColor, navColor, linear } = req.body;
+        const updatedData = {};
+
+
+        if (mainColor) {
+            updatedData.mainColor = mainColor;
+        }
+        if (navColor) {
+            updatedData.navColor = navColor;
+        }
+        if (linear) {
+            updatedData.linear = linear;
+        }
+
+        const colors = await ColorsModel.findOne();
+        if (!colors) {
+            return res.status(404).json({ message: 'Colors not found' });
+        }
+
+
+        colors.set(updatedData);
+        await colors.save();
+
+        return res.status(200).json({
+            message: 'Colors updated successfully',
+            data: colors,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+};
+

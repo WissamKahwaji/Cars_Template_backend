@@ -25,7 +25,7 @@ export const addContactData = async (req, res) => {
         let urlImg;
         if (req.files) {
             const imgPath = req.files['img'][0].path;
-            urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+            urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
         }
 
         const newContent = new contactContentModel({

@@ -39,8 +39,8 @@ export const addHomeData = async (req, res) => {
         const logoImg = req.files['logoImg'][0].path;
 
 
-        const urlLandingImg = 'http://localhost:5000/' + landingImg.replace(/\\/g, '/');
-        const urlLogoImg = 'http://localhost:5000/' + logoImg.replace(/\\/g, '/');
+        const urlLandingImg = 'https://www.rallyback.siidevelopment.com/' + landingImg.replace(/\\/g, '/');
+        const urlLogoImg = 'https://www.rallyback.siidevelopment.com/' + logoImg.replace(/\\/g, '/');
 
         const newHomeData = new homeModel({
             landingImg: urlLandingImg,
@@ -76,6 +76,7 @@ export const addHomeData = async (req, res) => {
 export const editHomeData = async (req, res) => {
     try {
         const { id } = req.params;
+
         const {
             brandName,
             brandDesc,
@@ -91,7 +92,7 @@ export const editHomeData = async (req, res) => {
             location
         } = req.body;
 
-
+        console.log(req.files['landingImg']);
         if (!req.files || (!req.files['landingImg'] && !req.files['logoImg'])) {
 
             const updatedData = {
@@ -125,8 +126,8 @@ export const editHomeData = async (req, res) => {
         const landingImgPath = req.files['landingImg'][0].path;
         const logoImgPath = req.files['logoImg'][0].path;
 
-        const urlLandingImg = 'http://localhost:5000/' + landingImgPath.replace(/\\/g, '/');
-        const urlLogoImg = 'http://localhost:5000/' + logoImgPath.replace(/\\/g, '/');
+        const urlLandingImg = 'https://www.rallyback.siidevelopment.com/' + landingImgPath.replace(/\\/g, '/');
+        const urlLogoImg = 'https://www.rallyback.siidevelopment.com/' + logoImgPath.replace(/\\/g, '/');
 
         const homeData = await homeModel.findById(id);
 

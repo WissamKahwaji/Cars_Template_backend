@@ -19,7 +19,7 @@ export const addClient = async (req, res) => {
     try {
         const { title } = req.body;
         const imgPath = req.files['img'][0].path;
-        const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
         const client = new ourClientsModel({
             img: urlImg,
             title: title,
@@ -46,7 +46,7 @@ export const editClient = async (req, res) => {
 
         if (req.body.img) {
             const imgPath = req.files['img'][0].path;
-            const urlImg = 'http://localhost:5000/' + imgPath.replace(/\\/g, '/');
+            const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
             updateFields.img = urlImg;
         }
 
