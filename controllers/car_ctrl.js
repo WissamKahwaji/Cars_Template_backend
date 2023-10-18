@@ -406,7 +406,9 @@ export const deleteCar = async (req, res) => {
 export const getCarRate = async (req, res) => {
     try {
         const { id } = req.params;
-        const rate = await carRateModel.findOne({ id: id });
+        const car = await carModel.findById(id);
+        const rateId = car.carRate;
+        const rate = await carRateModel.findById(rateId);
         return res.status(200).json({
             message: 'get Car Rate successfully',
             data: rate,
