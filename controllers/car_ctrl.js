@@ -477,7 +477,8 @@ export const editCarRate = async (req, res) => {
 
         // Save the updated car rate
         await carRate.save();
-
+        car.carRate = carRate._id;
+        await car.save();
         return res.status(200).json({
             message: 'Car rate updated successfully',
             data: carRate,
