@@ -446,3 +446,44 @@ export const addCarRate = async (req, res) => {
         return res.status(500).json({ message: 'Something went wrong' });
     }
 }
+
+export const editCarRate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { daily, weekly, monthly } = req.body;
+
+        const car = await carModel.findById(id);
+        if (!car) {
+            return res.status(404).json({ message: 'Car data not found' });
+        }
+
+        const carRate = await carRateModel.findById(car.carRate);
+        if (!carRate) {
+            return res.status(404).json({ message: 'Car rate data not found' });
+        }
+
+        // Update the fields if they are provided in the request
+        if (daily) {
+            carRate.daily = daily;
+        }
+
+        if (weekly) {
+            carRate.weekly = weekly;
+        }
+
+        if (monthly) {
+            carRate.monthly = monthly;
+        }
+
+        // Save the updated car rate
+        await carRate.save();
+
+        return res.status(200).json({
+            message: 'Car rate updated successfully',
+            data: carRate,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Something went wrong' });
+    }
+}

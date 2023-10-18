@@ -1,5 +1,5 @@
 import express from 'express';
-import { addCarPageData, addCarRate, addCarToCategoryOne, addCarToCategoryTwo, deleteCar, editCar, editCarPageData, getCarById, getCarPageData, getCarRate } from '../controllers/car_ctrl.js';
+import { addCarPageData, addCarRate, addCarToCategoryOne, addCarToCategoryTwo, deleteCar, editCar, editCarPageData, editCarRate, getCarById, getCarPageData, getCarRate } from '../controllers/car_ctrl.js';
 
 
 const router = express.Router();
@@ -15,6 +15,6 @@ router.put('/edit-car/:id', editCar);
 router.delete('/:carPageId/delete-car/:id', deleteCar);
 router.get('/get-car-rate/:id', getCarRate);
 router.post('/add-car-rate/:id', addCarRate);
-
+router.put('/edit-car-rate/:id', editCarRate);
 
 export default router;
