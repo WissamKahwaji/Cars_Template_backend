@@ -1,5 +1,6 @@
 import { aboutContentModel } from "../models/about/about_content_model.js";
 import { aboutModel } from "../models/about/about_model.js";
+import { anotherAboutModel } from "../models/about/another_about_model.js";
 
 
 export const getAboutData = async (req, res) => {
@@ -18,7 +19,7 @@ export const getAboutData = async (req, res) => {
 
 export const addAboutData = async (req, res) => {
     try {
-        const { pageHeading, descHeading, content } = req.body;
+        const { pageHeading, descHeading, content, secondeTitle, secondSectionImgs } = req.body;
 
 
 
@@ -46,11 +47,31 @@ export const addAboutData = async (req, res) => {
             }
 
         }
+        const chfArray = [];
+        if (req.files['imgs']) {
+            const chfImages = req.files['imgs'];
+
+            if (!chfImages || !Array.isArray(chfImages)) {
+                return res.status(404).json({ message: 'Attached files are missing or invalid.' });
+            }
+
+            for (const image of chfImages) {
+                if (!image) {
+                    return res.status(404).json({ message: 'Attached file is not an image.' });
+                }
+
+                const imageUrl = 'https://www.rallyback.siidevelopment.com/' + image.path.replace(/\\/g, '/');
+                chfArray.push(imageUrl);
+
+            }
+        }
 
         const newAboutData = new aboutModel({
             pageHeading,
             descHeading,
             content: contentArray,
+            secondeTitle,
+            secondSectionImgs: chfArray
         });
 
 
@@ -69,7 +90,7 @@ export const addAboutData = async (req, res) => {
 export const editAboutData = async (req, res) => {
     try {
         const { id } = req.params;
-        const { pageHeading, descHeading, content } = req.body;
+        const { pageHeading, descHeading, content, secondeTitle, secondSectionImgs } = req.body;
 
 
         const aboutData = await aboutModel.findById(id);
@@ -81,7 +102,7 @@ export const editAboutData = async (req, res) => {
 
         if (pageHeading) aboutData.pageHeading = pageHeading;
         if (descHeading) aboutData.descHeading = descHeading;
-
+        if (secondeTitle) aboutData.secondeTitle = secondeTitle;
 
         if (content) {
 
@@ -107,6 +128,7 @@ export const editAboutData = async (req, res) => {
                 }
             }
         }
+        
 
 
         await aboutData.save();
@@ -212,5 +234,50 @@ export const deleteAboutContent = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
+
+export const getAnotherAboutData = async (req, res) => {
+    try {
+        const aboutData = await anotherAboutModel.findOne();
+        return res.status(200).json({
+            message: 'Success',
+            data: aboutData,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+};
+export const addOrUpdateAnotherContent = async (req, res) => {
+    try {
+        const { content } = req.body;
+        const imgPath = req.files['img'][0].path;
+        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
+
+        const aboutData = await anotherAboutModel.findOne();
+
+        if (!aboutData) {
+            // If data doesn't exist, create a new document
+            aboutData = new anotherAboutModel({
+                img: urlImg,
+                content: content,
+            });
+        } else {
+            // If data exists, update it
+            aboutData.img = urlImg;
+            aboutData.content = content;
+        }
+
+        await aboutData.save();
+
+        return res.status(200).json({
+            message: "Content added or updated successfully",
+            data: aboutData,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Something went wrong" });
     }
 };

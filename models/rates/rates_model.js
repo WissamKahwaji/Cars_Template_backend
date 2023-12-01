@@ -7,7 +7,7 @@ const ratesSchema = new mongoose.Schema({
     content: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'ratesContent',
+            ref: 'Car',
         }
     ],
     concellationPolicy: String,

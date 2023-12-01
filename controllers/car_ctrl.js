@@ -5,17 +5,23 @@ import { carRateModel } from "../models/cars/car_rate_model.js";
 
 export const getCarPageData = async (req, res) => {
     try {
-        const carPageData = await carPageModel.findOne().populate({
-            path: 'categoryOneContent',
-            populate: [
-                { path: 'carRate', }
-            ],
-        }).populate({
-            path: 'categoryTwoContent',
-            populate: [
-                { path: 'carRate', }
-            ],
-        });
+        // const carPageData = await carPageModel.findOne().populate({
+        //     path: 'categoryOneContent',
+        //     populate: [
+        //         { path: 'carRate', }
+        //     ],
+        // }).populate({
+        //     path: 'categoryTwoContent',
+        //     populate: [
+        //         { path: 'carRate', }
+        //     ],
+        // }).populate({
+        //     path: 'categoryThreeContent',
+        //     populate: [
+        //         { path: 'carRate', }
+        //     ],
+        // });
+        const carPageData = await carPageModel.findOne().populate('categoryOneContent').populate('categoryTwoContent').populate('categoryThreeContent');
         return res.status(200).json({
             message: 'Success',
             data: carPageData,
@@ -28,13 +34,14 @@ export const getCarPageData = async (req, res) => {
 
 export const addCarPageData = async (req, res) => {
     try {
-        const { pageHeading, descHeading, categoryOne, categoryTwo, categoryOneContent, categoryTwoContent, concellationPolicy } = req.body;
+        const { pageHeading, descHeading, categoryOne, categoryTwo, categoryOneContent, categoryTwoContent, categoryThreeContent, concellationPolicy } = req.body;
 
         const imgPath = req.files['img'][0].path;
         const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
         const contentArray = [];
         const contentTwoArray = [];
+        const contentThreeArray = [];
 
         if (categoryOneContent) {
             for (const contentItem of categoryOneContent) {
@@ -116,7 +123,46 @@ export const addCarPageData = async (req, res) => {
             }
 
         }
+        if (categoryThreeContent) {
+            for (const contentItem of categoryThreeContent) {
+                const { img, title, desc, imgs } = contentItem;
+                const imgPath = img.path;
 
+                const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
+
+
+
+
+                const newContentItem = new carModel({
+                    img: urlImg,
+                    title,
+                    desc,
+                });
+
+                if (req.files['imgs']) {
+                    const carImages = req.files['imgs'];
+                    const imageUrls = [];
+                    if (!carImages || !Array.isArray(carImages)) {
+                        return res.status(404).json({ message: 'Attached files are missing or invalid.' });
+                    }
+
+                    for (const image of carImages) {
+                        if (!image) {
+                            return res.status(404).json({ message: 'Attached file is not an image.' });
+                        }
+
+                        const imageUrl = 'https://www.rallyback.siidevelopment.com/' + image.path.replace(/\\/g, '/');
+                        imageUrls.push(imageUrl);
+                        newContentItem.imgs = imageUrls;
+                    }
+                }
+
+                await newContentItem.save();
+
+                contentThreeArray.push(newContentItem._id);
+            }
+
+        }
 
         const newCarPageData = new carPageModel({
             pageHeading,
@@ -126,6 +172,7 @@ export const addCarPageData = async (req, res) => {
             categoryTwo: categoryTwo,
             categoryOneContent: contentArray,
             categoryTwoContent: contentTwoArray,
+            categoryThreeContent: contentThreeArray,
             concellationPolicy
         });
 
@@ -145,7 +192,7 @@ export const addCarPageData = async (req, res) => {
 export const editCarPageData = async (req, res) => {
     try {
         const { id } = req.params;
-        const { pageHeading, descHeading, categoryOne, categoryTwo, img, categoryOneContent, categoryTwoContent, concellationPolicy } = req.body;
+        const { pageHeading, descHeading, categoryOne, categoryTwo, categoryThree, img, categoryOneContent, categoryTwoContent, categoryThreeContent, concellationPolicy } = req.body;
 
 
         const carPageData = await carPageModel.findById(id);
@@ -159,6 +206,8 @@ export const editCarPageData = async (req, res) => {
         if (descHeading) carPageData.descHeading = descHeading;
         if (categoryOne) carPageData.categoryOne = categoryOne;
         if (categoryTwo) carPageData.categoryTwo = categoryTwo;
+        if (categoryThree) carPageData.categoryThree = categoryThree;
+
         if (concellationPolicy) carPageData.concellationPolicy = concellationPolicy;
         if (img) {
             const imgPath = req.files['img'][0].path;
@@ -213,7 +262,29 @@ export const editCarPageData = async (req, res) => {
                 }
             }
         }
+        if (categoryThreeContent) {
 
+            for (const contentItem of categoryThreeContent) {
+                const { _id, img, title, desc, imgs } = contentItem;
+
+
+                const contentItemToUpdate = await carModel.findById(_id);
+
+                if (contentItemToUpdate) {
+
+                    if (img) {
+                        const imgPath = img.path;
+                        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
+                        contentItemToUpdate.img = urlImg;
+                    }
+                    if (desc) contentItemToUpdate.desc = desc;
+                    if (title) contentItemToUpdate.title = title;
+
+
+                    await contentItemToUpdate.save();
+                }
+            }
+        }
 
         await carPageData.save();
 
@@ -230,7 +301,7 @@ export const editCarPageData = async (req, res) => {
 export const getCarById = async (req, res) => {
     try {
         const { id } = req.params;
-        const car = await carModel.findById(id).populate('carRate');
+        const car = await carModel.findById(id);
         return res.status(200).json({
             message: ' successfully',
             data: car,
@@ -244,21 +315,24 @@ export const getCarById = async (req, res) => {
 export const addCarToCategoryOne = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, desc, rates_description } = req.body;
+        const { title, desc, rates_description, carRate } = req.body;
 
         const carPage = await carPageModel.findById(id);
         if (!carPage) {
             return res.status(404).json({ message: 'CarPage data not found' });
         }
-
-        const imgPath = req.files['img'][0].path;
-        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
+        let urlImg;
+        if (req.files['img']) {
+            const imgPath = req.files['img'][0].path;
+            urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
+        }
 
         const car = new carModel({
             img: urlImg,
             title,
             desc,
             rates_description,
+            carRate,
         });
         if (req.files['imgs']) {
             const carImages = req.files['imgs'];
@@ -295,7 +369,7 @@ export const addCarToCategoryOne = async (req, res) => {
 export const addCarToCategoryTwo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, desc, rates_description } = req.body;
+        const { title, desc, rates_description, carRate } = req.body;
 
         const carPage = await carPageModel.findById(id);
         if (!carPage) {
@@ -309,7 +383,7 @@ export const addCarToCategoryTwo = async (req, res) => {
             img: urlImg,
             title,
             desc,
-            rates_description,
+            rates_description, carRate
         });
         if (req.files['imgs']) {
             const carImages = req.files['imgs'];
@@ -344,10 +418,66 @@ export const addCarToCategoryTwo = async (req, res) => {
     }
 };
 
+export const addCarToCategoryThree = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, desc, rates_description, carRate } = req.body;
+
+        const carPage = await carPageModel.findById(id);
+        if (!carPage) {
+            return res.status(404).json({ message: 'CarPage data not found' });
+        }
+
+        const imgPath = req.files['img'][0].path;
+        const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
+
+        const car = new carModel({
+            img: urlImg,
+            title,
+            desc,
+            rates_description,
+            carRate
+        });
+        if (req.files['imgs']) {
+            const carImages = req.files['imgs'];
+            const imageUrls = [];
+            if (!carImages || !Array.isArray(carImages)) {
+                return res.status(404).json({ message: 'Attached files are missing or invalid.' });
+            }
+
+            for (const image of carImages) {
+                if (!image) {
+                    return res.status(404).json({ message: 'Attached file is not an image.' });
+                }
+
+                const imageUrl = 'https://www.rallyback.siidevelopment.com/' + image.path.replace(/\\/g, '/');
+                imageUrls.push(imageUrl);
+                car.imgs = imageUrls;
+            }
+        }
+
+        await car.save();
+        const contentArray = carPage.categoryThreeContent;
+        contentArray.push(car._id);
+        carPage.categoryThreeContent = contentArray;
+        await carPage.save();
+        return res.status(201).json({
+            message: 'Car added successfully',
+            data: car,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
+
+
+
 export const editCar = async (req, res) => {
     try {
         const { id } = req.params;
-        const { img, title, desc, imgs, rates_description } = req.body;
+        const { img, title, desc, imgs, rates_description, carRate } = req.body;
 
         const car = await carModel.findById(id);
 
@@ -363,6 +493,7 @@ export const editCar = async (req, res) => {
         if (desc) car.desc = desc;
         if (title) car.title = title;
         if (rates_description) car.rates_description = rates_description;
+        if (carRate) car.carRate = carRate;
 
         await car.save();
 
@@ -423,24 +554,22 @@ export const addCarRate = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { daily, weekly, monthly } = req.body;
+        const { newRate } = req.body;
 
         const car = await carModel.findById(id);
         if (!car) {
             return res.status(404).json({ message: 'Car data not found' });
         }
-
-        const carRate = new carRateModel({
-            daily: daily,
-            weekly: weekly,
-            monthly: monthly,
-        });
-        await carRate.save();
-        car.carRate = carRate._id;
+        car.carRate.push(newRate);
+        // const carRate = new carRateModel({
+        //     title: title,
+        //     price: price,
+        // });
         await car.save();
+
+
         return res.status(201).json({
             message: 'Car added successfully',
-            data: carRate,
         });
 
     } catch (error) {
@@ -452,39 +581,22 @@ export const addCarRate = async (req, res) => {
 export const editCarRate = async (req, res) => {
     try {
         const { id } = req.params;
-        const { daily, weekly, monthly } = req.body;
+        const { newRates } = req.body;
+
 
         const car = await carModel.findById(id);
+
         if (!car) {
-            return res.status(404).json({ message: 'Car data not found' });
+            return res.status(404).json('Car not found');
         }
 
-        const carRate = await carRateModel.findById(car.carRate);
-        if (!carRate) {
-            return res.status(404).json({ message: 'Car rate data not found' });
-        }
 
-        // Update the fields if they are provided in the request
-        if (daily) {
-            carRate.daily = daily;
-        }
+        car.carRate = newRates;
 
-        if (weekly) {
-            carRate.weekly = weekly;
-        }
 
-        if (monthly) {
-            carRate.monthly = monthly;
-        }
-
-        // Save the updated car rate
-        await carRate.save();
-        car.carRate = carRate._id;
         await car.save();
-        return res.status(200).json({
-            message: 'Car rate updated successfully',
-            data: carRate,
-        });
+
+        return res.status(200).json('Car rates updated successfully');
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Something went wrong' });

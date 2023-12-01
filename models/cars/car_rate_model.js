@@ -3,9 +3,8 @@ import mongoose from "mongoose";
 
 
 const carRateSchema = new mongoose.Schema({
-    daily: String,
-    weekly: String,
-    monthly: String,
+    title: String,
+    price: String,
 });
 
 

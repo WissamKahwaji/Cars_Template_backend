@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 
 const homeSchema = new mongoose.Schema({
     landingImg: String,
+    landingvideo: String,
     brandName: String,
     brandDesc: String,
     logoImg: String,

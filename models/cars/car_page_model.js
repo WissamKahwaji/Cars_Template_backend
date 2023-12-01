@@ -7,6 +7,7 @@ const carPageSchema = new mongoose.Schema({
     img: String,
     categoryOne: String,
     categoryTwo: String,
+    categoryThree: String,
     categoryOneContent: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -14,6 +15,12 @@ const carPageSchema = new mongoose.Schema({
         }
     ],
     categoryTwoContent: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Car',
+        }
+    ],
+    categoryThreeContent: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Car',

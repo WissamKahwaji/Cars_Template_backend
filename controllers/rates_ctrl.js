@@ -28,20 +28,22 @@ export const addRatesData = async (req, res) => {
 
         if (content) {
             for (const contentItem of content) {
-                const { img, desc } = contentItem;
-                const imgPath = img.path;
+                // const { img, desc } = contentItem;
+                // const imgPath = img.path;
 
-                const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
+                // const urlImg = 'https://www.rallyback.siidevelopment.com/' + imgPath.replace(/\\/g, '/');
 
 
-                const newContentItem = new ratesContentModel({
-                    img: urlImg,
-                    desc,
-                });
+                // const newContentItem = new ratesContentModel({
+                //     img: urlImg,
+                //     desc,
+                // });
 
-                await newContentItem.save();
+                // await newContentItem.save();
 
-                contentArray.push(newContentItem._id);
+                // contentArray.push(newContentItem._id);
+                const { carId } = contentItem;
+                contentArray.push(carId);
             }
 
         }
@@ -203,6 +205,54 @@ export const deleteRatesContent = async (req, res) => {
             message: 'Rates content deleted successfully',
             data: deletedRatesContent,
         });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
+
+export const addCarToRates = async (req, res) => {
+    try {
+        const { carIds } = req.body;
+        const ratePage = await ratesModel.findOne();
+        if (!ratePage) {
+            return res.status(404).json('no rate found');
+
+        }
+
+        for (const id of carIds) {
+            if (!ratePage.content.includes(id)) {
+                ratePage.content.push(id);
+            }
+
+        }
+        await ratePage.save();
+        return res.status(200).json('cars added successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
+
+export const removeCarsFromRates = async (req, res) => {
+    try {
+        const { carIds } = req.body;
+        const ratePage = await ratesModel.findOne();
+        if (!ratePage) {
+            return res.status(404).json('no rate found');
+        }
+
+
+        for (const id of carIds) {
+            if (ratePage.content.includes(id)) {
+                ratePage.content.pull(id);
+            }
+        }
+
+        await ratePage.save();
+        return res.status(200).json('cars removed successfully');
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Something went wrong' });

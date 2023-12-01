@@ -9,6 +9,8 @@ const aboutSchema = new mongoose.Schema({
             ref: 'aboutContentModel',
         }
     ],
+    secondeTitle: String,
+    secondSectionImgs: [String]
 });
 
 
