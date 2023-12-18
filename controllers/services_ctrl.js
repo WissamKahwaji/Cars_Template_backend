@@ -226,18 +226,24 @@ export const editServiceContent = async (req, res) => {
       return res.status(404).json({ message: "Service content not found" });
     }
 
-    if (img) {
-      const imgPath = req.files["img"][0].path;
-      const urlImg =
-        "https://www.rallyback.siidevelopment.com/" +
-        imgPath.replace(/\\/g, "/");
-      serviceDataContent.img = urlImg;
-    }
+    // if (img) {
+    //   const imgPath = req.files["img"][0].path;
+    //   const urlImg =
+    //     "https://www.rallyback.siidevelopment.com/" +
+    //     imgPath.replace(/\\/g, "/");
+    //   serviceDataContent.img = urlImg;
+    // }
+    const imgPath =
+      req.files && req.files["img"] ? req.files["imgs"][index].path : null;
+    const urlImg = imgPath
+      ? "https://www.rallyback.siidevelopment.com/" +
+        imgPath.replace(/\\/g, "/")
+      : serviceDataContent.img;
     if (desc) serviceDataContent.desc = desc;
     if (title) serviceDataContent.title = title;
     if (titleAr) serviceDataContent.titleAr = titleAr;
     if (descAr) serviceDataContent.descAr = descAr;
-
+    serviceDataContent.img = urlImg;
     await serviceDataContent.save();
 
     return res.status(200).json({
