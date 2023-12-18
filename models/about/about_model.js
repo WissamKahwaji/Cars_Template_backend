@@ -13,7 +13,7 @@ const aboutSchema = new mongoose.Schema({
     },
   ],
   secondeTitle: String,
-  secondTitleAr: String,
+  secondeTitleAr: String,
   secondSectionImgs: [String],
 });
 

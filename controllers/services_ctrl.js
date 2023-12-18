@@ -22,13 +22,15 @@ export const addServicesData = async (req, res) => {
     const contentArray = [];
 
     if (content) {
-      for (const contentItem of content) {
-        const { img, title, desc } = contentItem;
-        const imgPath = img.path;
+      for (const [index, contentItem] of content.entries()) {
+        const { title, desc } = contentItem;
 
-        const urlImg =
-          "https://www.rallyback.siidevelopment.com/" +
-          imgPath.replace(/\\/g, "/");
+        const imgPath =
+          req.files && req.files["img"] ? req.files["imgs"][index].path : null;
+        const urlImg = imgPath
+          ? "https://www.rallyback.siidevelopment.com/" +
+            imgPath.replace(/\\/g, "/")
+          : null;
 
         const newContentItem = new ratesContentModel({
           img: urlImg,
@@ -62,54 +64,117 @@ export const addServicesData = async (req, res) => {
   }
 };
 
+// export const editServiceData = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { pageHeading, pageHeadingAr, descHeading, content, descHeadingAr } =
+//       req.body;
+
+//     const servicesData = await serviceModel.findById(id);
+
+//     if (!servicesData) {
+//       return res.status(404).json({ message: "Services data not found" });
+//     }
+
+//     if (pageHeading) servicesData.pageHeading = pageHeading;
+//     if (pageHeadingAr) servicesData.pageHeadingAr = pageHeadingAr;
+//     if (descHeading) servicesData.descHeading = descHeading;
+//     if (descHeadingAr) servicesData.descHeadingAr = descHeadingAr;
+
+//     if (content) {
+//       for (const contentItem of content) {
+//         const { _id, img, title, desc } = contentItem;
+
+//         const contentItemToUpdate = await serviceContent.findById(_id);
+
+//         if (contentItemToUpdate) {
+//           if (img) {
+//             const imgPath = img.path;
+//             const urlImg =
+//               "https://www.rallyback.siidevelopment.com/" +
+//               imgPath.replace(/\\/g, "/");
+//             contentItemToUpdate.img = urlImg;
+//           }
+//           if (desc) contentItemToUpdate.desc = desc;
+//           if (title) contentItemToUpdate.title = title;
+
+//           await contentItemToUpdate.save();
+//         }
+//       }
+//     }
+
+//     await servicesData.save();
+
+//     return res.status(200).json({
+//       message: "Service data updated successfully",
+//       data: servicesData,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Something went wrong" });
+//   }
+// };
+
 export const editServiceData = async (req, res) => {
   try {
     const { id } = req.params;
     const { pageHeading, pageHeadingAr, descHeading, content, descHeadingAr } =
       req.body;
 
-    const servicesData = await serviceModel.findById(id);
+    // Find the existing service data
+    const existingServiceData = await serviceModel.findById(id);
 
-    if (!servicesData) {
-      return res.status(404).json({ message: "Services data not found" });
+    if (!existingServiceData) {
+      return res.status(404).json({ message: "Service not found" });
     }
 
-    if (pageHeading) servicesData.pageHeading = pageHeading;
-    if (pageHeadingAr) servicesData.pageHeadingAr = pageHeadingAr;
-    if (descHeading) servicesData.descHeading = descHeading;
-    if (descHeadingAr) servicesData.descHeadingAr = descHeadingAr;
+    // Update the service data with the user-inputted values
+    if (pageHeading) existingServiceData.pageHeading = pageHeading;
+    if (pageHeadingAr) existingServiceData.pageHeadingAr = pageHeadingAr;
+    if (descHeading) existingServiceData.descHeading = descHeading;
+    if (descHeadingAr) existingServiceData.descHeadingAr = descHeadingAr;
 
+    // Update content if provided
     if (content) {
-      for (const contentItem of content) {
-        const { _id, img, title, desc } = contentItem;
+      const updatedContentArray = [];
 
-        const contentItemToUpdate = await serviceContent.findById(_id);
+      for (const [index, contentItem] of content.entries()) {
+        const { _id, title, desc } = contentItem;
 
-        if (contentItemToUpdate) {
-          if (img) {
-            const imgPath = img.path;
-            const urlImg =
-              "https://www.rallyback.siidevelopment.com/" +
-              imgPath.replace(/\\/g, "/");
-            contentItemToUpdate.img = urlImg;
-          }
-          if (desc) contentItemToUpdate.desc = desc;
-          if (title) contentItemToUpdate.title = title;
+        // Find the existing content item
+        const existingContentItem = await ratesContentModel.findById(_id);
 
-          await contentItemToUpdate.save();
+        if (!existingContentItem) {
+          return res.status(500).json({ message: "Content not found" });
         }
+
+        if (title) existingContentItem.title = title;
+        if (desc) existingContentItem.desc = desc;
+        const imgPath =
+          req.files && req.files["img"] ? req.files["imgs"][index].path : null;
+        const urlImg = imgPath
+          ? "https://www.rallyback.siidevelopment.com/" +
+            imgPath.replace(/\\/g, "/")
+          : existingContentItem.img;
+        existingContentItem.img = urlImg;
+
+        await existingContentItem.save();
+
+        updatedContentArray.push(existingContentItem._id);
       }
+
+      existingServiceData.content = updatedContentArray;
     }
 
-    await servicesData.save();
+    await existingServiceData.save();
 
     return res.status(200).json({
       message: "Service data updated successfully",
-      data: servicesData,
+      data: existingServiceData,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
 

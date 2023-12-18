@@ -25,7 +25,7 @@ export const addAboutData = async (req, res) => {
       secondeTitle,
       secondSectionImgs,
       descHeadingAr,
-      secondTitleAr,
+      secondeTitleAr,
     } = req.body;
 
     const contentArray = [];
@@ -80,7 +80,7 @@ export const addAboutData = async (req, res) => {
       pageHeadingAr,
       descHeading,
       descHeadingAr: descHeadingAr,
-      secondTitleAr: secondTitleAr,
+      secondeTitleAr: secondeTitleAr,
       content: contentArray,
       secondeTitle,
       secondSectionImgs: chfArray,
@@ -106,7 +106,7 @@ export const editAboutData = async (req, res) => {
       pageHeadingAr,
       descHeading,
       descHeadingAr,
-      secondTitleAr,
+      secondeTitleAr,
       content,
       secondeTitle,
       secondSectionImgs,
@@ -122,7 +122,7 @@ export const editAboutData = async (req, res) => {
     if (pageHeadingAr) aboutData.pageHeadingAr = pageHeadingAr;
     if (descHeading) aboutData.descHeading = descHeading;
     if (secondeTitle) aboutData.secondeTitle = secondeTitle;
-    if (secondTitleAr) aboutData.secondTitleAr = secondTitleAr;
+    if (secondeTitleAr) aboutData.secondeTitleAr = secondeTitleAr;
     if (descHeadingAr) aboutData.descHeadingAr = descHeadingAr;
     if (content) {
       for (const contentItem of content) {
