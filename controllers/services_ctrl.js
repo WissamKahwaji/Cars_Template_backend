@@ -281,3 +281,17 @@ export const deleteServiceContent = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+export const getServiceContentById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const servicesContentData = await serviceContent.findById(id);
+    return res.status(200).json({
+      message: "Success",
+      data: servicesContentData,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
