@@ -18,6 +18,7 @@ import contactRoutes from "./routes/contact_router.js";
 import ourClientsRoutes from "./routes/our_client_router.js";
 import bookingRoutes from "./routes/booking_router.js";
 import enquiryRoutes from "./routes/enquiry_router.js";
+import authRoutes from "./routes/auth_router.js";
 const app = express();
 dotenv.config();
 
@@ -78,7 +79,7 @@ app.use("/contact", contactRoutes);
 app.use("/ourClients", ourClientsRoutes);
 app.use("/bookings", bookingRoutes);
 app.use("/inquiry", enquiryRoutes);
-
+app.use("/auth", authRoutes);
 app.get("/", (req, res) => res.send("Server is Running>>>>>"));
 
 const PORT = process.env.PORT || 5000;
