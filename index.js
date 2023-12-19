@@ -59,6 +59,7 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).fields([
     { name: "img", maxCount: 1 },
     { name: "imgs", maxCount: 5 },
+    { name: "chImgs", maxCount: 15 },
     { name: "landingImg", maxCount: 1 },
     { name: "logoImg", maxCount: 1 },
     { name: "imgHeading", maxCount: 1 },

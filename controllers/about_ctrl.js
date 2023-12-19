@@ -31,13 +31,15 @@ export const addAboutData = async (req, res) => {
     const contentArray = [];
 
     if (content) {
-      for (const contentItem of content) {
-        const { img, mainTitle, secTitle, desc } = contentItem;
-        const imgPath = img.path;
+      for (const [index, contentItem] of content.entries()) {
+        const { mainTitle, secTitle, desc } = contentItem;
 
-        const urlImg =
-          "https://www.rallyback.siidevelopment.com/" +
-          imgPath.replace(/\\/g, "/");
+        const imgPath =
+          req.files && req.files["imgs"] ? req.files["imgs"][index].path : null;
+        const urlImg = imgPath
+          ? "https://www.rallyback.siidevelopment.com/" +
+            imgPath.replace(/\\/g, "/")
+          : null;
 
         const newContentItem = new aboutContentModel({
           img: urlImg,
@@ -52,8 +54,8 @@ export const addAboutData = async (req, res) => {
       }
     }
     const chfArray = [];
-    if (req.files["imgs"]) {
-      const chfImages = req.files["imgs"];
+    if (req.files["chImgs"]) {
+      const chfImages = req.files["chImgs"];
 
       if (!chfImages || !Array.isArray(chfImages)) {
         return res
@@ -125,19 +127,21 @@ export const editAboutData = async (req, res) => {
     if (secondeTitleAr) aboutData.secondeTitleAr = secondeTitleAr;
     if (descHeadingAr) aboutData.descHeadingAr = descHeadingAr;
     if (content) {
-      for (const contentItem of content) {
+      for (const [index, contentItem] of content.entries()) {
         const { _id, img, mainTitle, secTitle, desc } = contentItem;
 
         const contentItemToUpdate = await aboutContentModel.findById(_id);
 
         if (contentItemToUpdate) {
-          if (img) {
-            const imgPath = img.path;
-            const urlImg =
-              "https://www.rallyback.siidevelopment.com/" +
-              imgPath.replace(/\\/g, "/");
-            contentItemToUpdate.img = urlImg;
-          }
+          const imgPath =
+            req.files && req.files["imgs"]
+              ? req.files["imgs"][index].path
+              : null;
+          const urlImg = imgPath
+            ? "https://www.rallyback.siidevelopment.com/" +
+              imgPath.replace(/\\/g, "/")
+            : contentItemToUpdate.img;
+          contentItemToUpdate.img = urlImg;
           if (desc) contentItemToUpdate.desc = desc;
           if (mainTitle) contentItemToUpdate.mainTitle = mainTitle;
           if (secTitle) contentItemToUpdate.secTitle = secTitle;
@@ -161,10 +165,10 @@ export const editAboutData = async (req, res) => {
 
 export const addAboutContent = async (req, res) => {
   try {
-    const { id } = req.params;
+    // const { id } = req.params;
     const { mainTitle, secTitle, desc, descAr, secTitleAr } = req.body;
 
-    const about = await aboutModel.findById(id);
+    const about = await aboutModel.findOne();
     if (!about) {
       return res.status(404).json({ message: "About data not found" });
     }
@@ -235,9 +239,9 @@ export const editAboutContent = async (req, res) => {
 
 export const deleteAboutContent = async (req, res) => {
   try {
-    const { aboutId, id } = req.params;
+    const { id } = req.params;
 
-    const about = await aboutModel.findById(aboutId);
+    const about = await aboutModel.findOne();
     if (!about) {
       return res.status(404).json({ message: "About data not found" });
     }

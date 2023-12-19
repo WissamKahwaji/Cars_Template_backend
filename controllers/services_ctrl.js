@@ -26,7 +26,7 @@ export const addServicesData = async (req, res) => {
         const { title, desc } = contentItem;
 
         const imgPath =
-          req.files && req.files["img"] ? req.files["imgs"][index].path : null;
+          req.files && req.files["imgs"] ? req.files["imgs"][index].path : null;
         const urlImg = imgPath
           ? "https://www.rallyback.siidevelopment.com/" +
             imgPath.replace(/\\/g, "/")
@@ -151,7 +151,7 @@ export const editServiceData = async (req, res) => {
         if (title) existingContentItem.title = title;
         if (desc) existingContentItem.desc = desc;
         const imgPath =
-          req.files && req.files["img"] ? req.files["imgs"][index].path : null;
+          req.files && req.files["imgs"] ? req.files["imgs"][index].path : null;
         const urlImg = imgPath
           ? "https://www.rallyback.siidevelopment.com/" +
             imgPath.replace(/\\/g, "/")
