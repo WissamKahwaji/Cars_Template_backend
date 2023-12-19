@@ -660,7 +660,7 @@ export const getCarRate = async (req, res) => {
 
 export const addCarRate = async (req, res) => {
   const { carId } = req.params;
-  const { carRates } = req.body;
+  const { carRate } = req.body;
 
   try {
     const car = await carModel.findById(carId);
@@ -669,8 +669,7 @@ export const addCarRate = async (req, res) => {
       return res.status(404).json({ message: "Car not found" });
     }
 
-    // Assuming carRates is an array of carRate objects
-    car.carRate.push(...carRates);
+    car.carRate.push(carRate);
     await car.save();
 
     return res
