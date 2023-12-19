@@ -633,49 +633,120 @@ export const getCarRate = async (req, res) => {
   }
 };
 
-export const addCarRate = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { newRate } = req.body;
+// export const addCarRate = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { newRate } = req.body;
 
-    const car = await carModel.findById(id);
+//     const car = await carModel.findById(id);
+//     if (!car) {
+//       return res.status(404).json({ message: "Car data not found" });
+//     }
+//     car.carRate.push(newRate);
+//     // const carRate = new carRateModel({
+//     //     title: title,
+//     //     price: price,
+//     // });
+//     await car.save();
+
+//     return res.status(201).json({
+//       message: "Car added successfully",
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: "Something went wrong" });
+//   }
+// };
+
+export const addCarRate = async (req, res) => {
+  const { carId } = req.params;
+  const { carRates } = req.body;
+
+  try {
+    const car = await carModel.findById(carId);
+
     if (!car) {
-      return res.status(404).json({ message: "Car data not found" });
+      return res.status(404).json({ message: "Car not found" });
     }
-    car.carRate.push(newRate);
-    // const carRate = new carRateModel({
-    //     title: title,
-    //     price: price,
-    // });
+
+    // Assuming carRates is an array of carRate objects
+    car.carRate.push(...carRates);
     await car.save();
 
-    return res.status(201).json({
-      message: "Car added successfully",
-    });
+    return res
+      .status(200)
+      .json({ message: "CarRates added successfully", car });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
+// export const editCarRate = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { newRates } = req.body;
+
+//     const car = await carModel.findById(id);
+
+//     if (!car) {
+//       return res.status(404).json("Car not found");
+//     }
+
+//     car.carRate = newRates;
+
+//     await car.save();
+
+//     return res.status(200).json("Car rates updated successfully");
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: "Something went wrong" });
+//   }
+// };
 
 export const editCarRate = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { newRates } = req.body;
+  const { carId } = req.params;
+  const { updatedCarRates } = req.body;
 
-    const car = await carModel.findById(id);
+  try {
+    const car = await carModel.findById(carId);
 
     if (!car) {
-      return res.status(404).json("Car not found");
+      return res.status(404).json({ message: "Car not found" });
     }
 
-    car.carRate = newRates;
-
+    car.carRate = updatedCarRates;
     await car.save();
 
-    return res.status(200).json("Car rates updated successfully");
+    return res
+      .status(200)
+      .json({ message: "CarRates updated successfully", car });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+};
+export const deleteCarRate = async (req, res) => {
+  const { carId, carRateId } = req.params;
+
+  try {
+    const updatedCar = await carModel.findOneAndUpdate(
+      { _id: carId },
+      { $pull: { carRate: { _id: carRateId } } },
+      { new: true }
+    );
+
+    if (!updatedCar) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "CarRate deleted successfully", car: updatedCar });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
