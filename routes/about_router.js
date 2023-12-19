@@ -17,7 +17,7 @@ router.post("/add-about", addAboutData);
 router.put("/edit-about/:id", editAboutData);
 router.post("/add-about-content", addAboutContent);
 router.put("/edit-about-content/:id", editAboutContent);
-router.delete("/:aboutId/delete-about-content/:id", deleteAboutContent);
+router.delete("/delete-about-content/:id", deleteAboutContent);
 router.get("/another-about", getAnotherAboutData);
 router.post("/add-or-update", addOrUpdateAnotherContent);
 
