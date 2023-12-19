@@ -262,6 +262,19 @@ export const deleteAboutContent = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+export const getAboutContentById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const aboutData = await aboutContentModel.findById(id);
+    return res.status(200).json({
+      message: "Success",
+      data: aboutData,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
 
 export const getAnotherAboutData = async (req, res) => {
   try {
