@@ -76,7 +76,7 @@ app.use("/nav", navRoutes);
 app.use("/contact", contactRoutes);
 app.use("/ourClients", ourClientsRoutes);
 app.use("/bookings", bookingRoutes);
-app.use("/enquiry", enquiryRoutes);
+app.use("/inquiry", enquiryRoutes);
 
 app.get("/", (req, res) => res.send("Server is Running>>>>>"));
 
