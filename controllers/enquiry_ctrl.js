@@ -53,3 +53,16 @@ export const addEnquiryForm = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+export const getUserInquiryData = async (req, res) => {
+  try {
+    const enquiries = await userEnquiryModel.find();
+    return res.status(200).json({
+      message: "Success",
+      data: enquiries,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
