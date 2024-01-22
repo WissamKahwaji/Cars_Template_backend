@@ -9,6 +9,6 @@ import auth from "../middlewares/auth.js";
 const router = express.Router();
 
 router.get("/", getEnquiryData);
-router.post("/form", auth, addEnquiryForm);
-router.get("/user-inquiries", getUserInquiryData);
+router.post("/form", addEnquiryForm);
+router.get("/user-enquiries", getUserInquiryData);
 export default router;
