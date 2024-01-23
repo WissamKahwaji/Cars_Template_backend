@@ -22,14 +22,14 @@ export const addEnquiryForm = async (req, res) => {
       port: 465, // true for 465, false for other ports
       host: "smtp.gmail.com",
       auth: {
-        user: "Netzoon.2023@gmail.com",
-        pass: "gncp ypax rnfm apxh",
+        user: "bookingrally@gmail.com",
+        pass: "mkra ozec lvju qdfx",
       },
       secure: true,
     });
     const mailOptions = {
       from: email,
-      to: "netzoon.2023@gmail.com",
+      to: "info@rallylimo.com",
       subject: "New Enquiry",
       text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
     };

@@ -565,7 +565,7 @@ export const editCar = async (req, res) => {
       return res.status(404).json({ message: "Car not found" });
     }
 
-    if (img) {
+    if (req.files["img"]) {
       const imgPath = req.files["img"][0].path;
       const urlImg =
         "https://www.rallyback.siidevelopment.com/" +
